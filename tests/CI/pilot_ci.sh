@@ -198,8 +198,18 @@ function fullPilot(){
     echo 'ERROR: cannot run dirac-configure'
     return
   fi
-}
 
+  # HACK: Fix up running the pilot tests
+  env
+  unset PYTHONUSERBASE
+  which pip
+  python -c 'import LbPlatformUtils; print(LbPlatformUtils.__file__)'
+  python -c 'import LbEnv; print(LbEnv.__file__)'
+  python -c 'import pip; print(pip.__file__)'
+  pip install six
+  pip install --upgrade git+https://gitlab.cern.ch/cburr/LbPlatformUtils.git@fix-singularity-cwd
+  pip install --upgrade git+https://gitlab.cern.ch/cburr/LbEnv.git@fix-singularity-cwd
+}
 
 function installStompRequestsIfNecessary()
 {
